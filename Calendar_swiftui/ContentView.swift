@@ -66,18 +66,21 @@ struct ContentView: View {
                      
                     }
                 }
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), content: {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7),
+                          spacing: 20){
                     ForEach(fetchDates()){ value in
-                        if value.day != -1 {
-                            Text("\(value.day)")
-                        }
-                        else{
-                            Text("")
-                        }
+                        ZStack{
+                            if value.day != -1 {
+                                Text("\(value.day)")
+                            }
+                            else{
+                                Text("")
+                            }
+                        }.frame(width: 32, height: 32)
                     }
-                })
+                }
             }
-           
+            .padding()
         }
         
     }
