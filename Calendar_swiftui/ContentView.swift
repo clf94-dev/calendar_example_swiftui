@@ -68,7 +68,12 @@ struct ContentView: View {
                 }
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), content: {
                     ForEach(fetchDates()){ value in
-                        Text("\(value.day)")
+                        if value.day != -1 {
+                            Text("\(value.day)")
+                        }
+                        else{
+                            Text("")
+                        }
                     }
                 })
             }
@@ -81,9 +86,13 @@ struct ContentView: View {
         let calendar = Calendar.current
         let currentMonth = fetchSelectedMonth()
         
-        let datesOfMonth = currentMonth.datesOfMonth().map({CalendarDate(day: calendar.component(.day, from: $0), date: $0)})
+        var dates = currentMonth.datesOfMonth().map({CalendarDate(day: calendar.component(.day, from: $0), date: $0)})
+        let firstDayOfWeek = calendar.component(.weekday, from: dates.first?.date ?? Date())
         
-        return datesOfMonth
+        for _ in 0..<firstDayOfWeek - 1 {
+            dates.insert(CalendarDate(day: -1, date: Date()), at: 0)
+        }
+        return dates
         
     }
     
