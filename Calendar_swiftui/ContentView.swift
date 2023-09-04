@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     let days: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ]
     @State var selectedMonth = 0
+    @State var selectedDate = Date()
     var body: some View {
         VStack {
             ZStack{
@@ -35,7 +36,9 @@ struct ContentView: View {
                 HStack{
                     Spacer()
                     Button{
-                            print("backwards")
+                        withAnimation {
+                            selectedMonth -= 1
+                        }
                     } label:{
                         Image(systemName: "lessthan")
                             .resizable()
@@ -44,10 +47,12 @@ struct ContentView: View {
                             .foregroundStyle(.gray)
                     }
                     Spacer()
-                    Text("September 2023")
+                    Text(selectedDate.monthAndYear())
                     Spacer()
                     Button{
-                        
+                        withAnimation {
+                            selectedMonth += 1
+                        }
                     } label: {
                         Image(systemName: "greaterthan")
                             .resizable()
@@ -81,6 +86,9 @@ struct ContentView: View {
                 }
             }
             .padding()
+            .onChange(of: selectedMonth) {
+                selectedDate = fetchSelectedMonth()
+            }
         }
         
     }
@@ -108,6 +116,12 @@ struct ContentView: View {
     }
 }
 extension Date {
+    func monthAndYear() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM YYYY"
+        
+        return formatter.string(from: self)
+    }
     func datesOfMonth() -> [Date] {
         let calendar = Calendar.current
         let currentMonth = calendar.component(.month, from: self)
